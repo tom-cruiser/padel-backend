@@ -30,6 +30,40 @@ logs/
 
 # Prisma
 prisma/migrations/migration_lock.toml
+prisma/dev.db
+**/node_modules/
+
+# Next.js
+.next/
+
+# TypeScript
+*.tsbuildinfo
+
+# Coverage
+coverage/
+
+# Test
+.nyc_output/
+
+# Logs
+logs/
+*.log
+
+# Runtime files
+pids/
+*.pid
+*.seed
+
+# Generated Prisma client
+node_modules/.prisma/
+
+# Uploaded files
+uploads/
+
+# Docker
+docker-compose.override.yml
+Dockerfile
+
 
 # Uploads
 uploads/
