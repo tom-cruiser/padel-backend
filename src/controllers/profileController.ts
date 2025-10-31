@@ -42,14 +42,41 @@ export const uploadAvatar = async (req: AuthRequest, res: Response) => {
     if (!req.file) {
       return res.status(400).json({ message: 'No file uploaded' });
     }
-    const result = await uploadToImageKit(req.file.path, 'avatars');
-    const user = await prisma.user.update({
-      where: { id: req.user!.userId },
-      data: { avatar: result.url },
-    });
-    res.json({ avatar: user.avatar });
+
+    // Validate file type
+    if (!req.file.mimetype.startsWith('image/')) {
+      return res.status(400).json({ message: 'File must be an image' });
+    }
+
+    // Validate file size (5MB)
+    const maxSize = 5 * 1024 * 1024; // 5MB
+    if (req.file.size > maxSize) {
+      return res.status(400).json({ message: 'File size must be less than 5MB' });
+    }
+
+    // Upload to ImageKit
+    let result;
+    try {
+      result = await uploadToImageKit(req.file.path, 'avatars');
+    } catch (error) {
+      console.error('ImageKit upload error:', error);
+      return res.status(500).json({ message: 'Failed to upload to image service' });
+    }
+
+    // Update user avatar in database
+    try {
+      const user = await prisma.user.update({
+        where: { id: req.user!.userId },
+        data: { avatar: result.url },
+      });
+      res.json({ avatar: user.avatar });
+    } catch (error) {
+      console.error('Database update error:', error);
+      return res.status(500).json({ message: 'Failed to update user avatar' });
+    }
   } catch (err) {
-    res.status(500).json({ message: 'Failed to upload avatar', error: err });
+    console.error('Avatar upload error:', err);
+    res.status(500).json({ message: 'Failed to upload avatar' });
   }
 };
 

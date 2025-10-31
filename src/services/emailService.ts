@@ -1,5 +1,5 @@
-import nodemailer from 'nodemailer';
-import logger from '../utils/logger';
+import nodemailer from "nodemailer";
+import logger from "../utils/logger";
 
 interface EmailOptions {
   to: string;
@@ -13,8 +13,8 @@ class EmailService {
 
   constructor() {
     this.transporter = nodemailer.createTransport({
-      host: process.env.EMAIL_HOST || 'smtp.gmail.com',
-      port: parseInt(process.env.EMAIL_PORT || '587'),
+      host: process.env.EMAIL_HOST || "smtp.gmail.com",
+      port: parseInt(process.env.EMAIL_PORT || "587"),
       secure: false, // true for 465, false for other ports
       auth: {
         user: process.env.EMAIL_USER,
@@ -33,10 +33,13 @@ class EmailService {
         html: options.html,
       });
 
-      logger.info('Email sent successfully:', { messageId: info.messageId, to: options.to });
+      logger.info("Email sent successfully:", {
+        messageId: info.messageId,
+        to: options.to,
+      });
       return true;
     } catch (error) {
-      logger.error('Failed to send email:', error);
+      logger.error("Failed to send email:", error);
       return false;
     }
   }
@@ -52,7 +55,9 @@ class EmailService {
     const formatTime = (time: number) => {
       const hours = Math.floor(time);
       const minutes = (time % 1) * 60;
-      return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
+      return `${hours.toString().padStart(2, "0")}:${minutes
+        .toString()
+        .padStart(2, "0")}`;
     };
 
     const html = `
@@ -88,15 +93,26 @@ class EmailService {
                 </div>
                 <div class="detail-row">
                   <span class="detail-label">Date:</span>
-                  <span class="detail-value">${new Date(date).toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</span>
+                  <span class="detail-value">${new Date(
+                    date
+                  ).toLocaleDateString("en-US", {
+                    weekday: "long",
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                  })}</span>
                 </div>
                 <div class="detail-row">
                   <span class="detail-label">Time:</span>
-                  <span class="detail-value">${formatTime(startTime)} - ${formatTime(endTime)}</span>
+                  <span class="detail-value">${formatTime(
+                    startTime
+                  )} - ${formatTime(endTime)}</span>
                 </div>
                 <div class="detail-row">
                   <span class="detail-label">Duration:</span>
-                  <span class="detail-value">${endTime - startTime} hour(s)</span>
+                  <span class="detail-value">${
+                    endTime - startTime
+                  } hour(s)</span>
                 </div>
               </div>
 
@@ -137,7 +153,9 @@ Padel Court Booking System
 
     return this.sendEmail({
       to: userEmail,
-      subject: `Booking Confirmed - ${courtName} on ${new Date(date).toLocaleDateString()}`,
+      subject: `Booking Confirmed - ${courtName} on ${new Date(
+        date
+      ).toLocaleDateString()}`,
       html,
       text,
     });
@@ -154,7 +172,9 @@ Padel Court Booking System
     const formatTime = (time: number) => {
       const hours = Math.floor(time);
       const minutes = (time % 1) * 60;
-      return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
+      return `${hours.toString().padStart(2, "0")}:${minutes
+        .toString()
+        .padStart(2, "0")}`;
     };
 
     const html = `
@@ -191,11 +211,20 @@ Padel Court Booking System
                 </div>
                 <div class="detail-row">
                   <span class="detail-label">Date:</span>
-                  <span class="detail-value">${new Date(date).toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</span>
+                  <span class="detail-value">${new Date(
+                    date
+                  ).toLocaleDateString("en-US", {
+                    weekday: "long",
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                  })}</span>
                 </div>
                 <div class="detail-row">
                   <span class="detail-label">Time:</span>
-                  <span class="detail-value">${formatTime(startTime)} - ${formatTime(endTime)}</span>
+                  <span class="detail-value">${formatTime(
+                    startTime
+                  )} - ${formatTime(endTime)}</span>
                 </div>
               </div>
             </div>

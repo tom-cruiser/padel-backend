@@ -1,18 +1,19 @@
 import { Request, Response, NextFunction } from 'express';
 import { verifyAccessToken, TokenPayload } from '../utils/jwt';
+import { prisma } from '../config/database';
 
 export interface AuthRequest extends Request {
-  user?: TokenPayload;
-  body: any;
-  params: any;
-  query: any;
+  user?: {
+    userId: string;
+    role: string;
+  };
 }
 
-export const authenticate = (
-  req: AuthRequest,
+export const authenticate = async (
+  req: Request,
   res: Response,
   next: NextFunction
-): void => {
+): Promise<void> => {
   try {
     const authHeader = req.headers.authorization;
 
@@ -25,6 +26,13 @@ export const authenticate = (
     const decoded = verifyAccessToken(token);
 
     req.user = decoded;
+    
+    // Update last seen timestamp
+    await prisma.user.update({
+      where: { id: decoded.userId },
+      data: { lastSeen: new Date() },
+    });
+
     next();
   } catch (error) {
     res.status(401).json({ error: 'Invalid or expired token' });

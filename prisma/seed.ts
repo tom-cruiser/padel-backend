@@ -8,7 +8,24 @@ const prisma = new PrismaClient();
 async function main() {
   console.log('🌱 Starting database seeding...');
 
-  // Create admin user
+  // Create super admin user
+  const hashedSuperAdminPassword = await bcrypt.hash('superadmin123', 10);
+  const superAdmin = await prisma.user.upsert({
+    where: { email: 'superadmin@padelcourt.com' },
+    update: {},
+    create: {
+      email: 'superadmin@padelcourt.com',
+      password: hashedSuperAdminPassword,
+      firstName: 'Super',
+      lastName: 'Admin',
+      role: 'ADMIN',
+      language: 'en',
+      isActive: true,
+    },
+  });
+  console.log('✅ Super Admin created:', superAdmin.email);
+
+  // Create facility admin
   const hashedAdminPassword = await bcrypt.hash('admin123', 10);
   const admin = await prisma.user.upsert({
     where: { email: 'admin@padelcourt.com' },
@@ -16,13 +33,31 @@ async function main() {
     create: {
       email: 'admin@padelcourt.com',
       password: hashedAdminPassword,
-      firstName: 'Admin',
-      lastName: 'User',
+      firstName: 'Facility',
+      lastName: 'Manager',
       role: 'ADMIN',
       language: 'en',
+      isActive: true,
     },
   });
-  console.log('✅ Admin user created:', admin.email);
+  console.log('✅ Facility Admin created:', admin.email);
+
+  // Create assistant admin
+  const hashedAssistantPassword = await bcrypt.hash('assistant123', 10);
+  const assistant = await prisma.user.upsert({
+    where: { email: 'assistant@padelcourt.com' },
+    update: {},
+    create: {
+      email: 'assistant@padelcourt.com',
+      password: hashedAssistantPassword,
+      firstName: 'Assistant',
+      lastName: 'Manager',
+      role: 'ADMIN',
+      language: 'en',
+      isActive: true,
+    },
+  });
+  console.log('✅ Assistant Admin created:', assistant.email);
 
   // Create demo player
   const hashedPlayerPassword = await bcrypt.hash('player123', 10);

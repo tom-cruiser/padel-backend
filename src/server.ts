@@ -15,6 +15,10 @@ import courtRoutes from './routes/courts';
 import notificationRoutes from './routes/notifications';
 import messageRoutes from './routes/messages';
 import profileRoutes from './routes/profile';
+import contactRoutes from './routes/contact';
+import userRoutes from './routes/users';
+import exportRoutes from './routes/exports';
+import galleryRoutes from './routes/gallery';
 import { errorHandler } from './middleware/errorHandler';
 import logger from './utils/logger';
 import { prisma } from './config/database';
@@ -162,6 +166,10 @@ app.use('/api/courts', courtRoutes);
 app.use('/api/notifications', notificationRoutes);
 app.use('/api/messages', messageRoutes);
 app.use('/api/profile', profileRoutes);
+app.use('/api/contact', contactRoutes);
+app.use('/api/users', userRoutes);
+app.use('/api/exports', exportRoutes);
+app.use('/api/gallery', galleryRoutes);
 
 // 404 handler
 app.use((req, res) => {

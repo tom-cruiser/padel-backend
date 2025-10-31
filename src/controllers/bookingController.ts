@@ -334,11 +334,24 @@ export const cancelBooking = async (req: AuthRequest, res: Response): Promise<vo
 
 export const getMyBookings = async (req: AuthRequest, res: Response): Promise<void> => {
   try {
-    const userId = req.user!.userId;
+    const { userId, role } = req.user!;
+
+    // If user is admin, return all bookings
+    const where = role === 'ADMIN' ? {} : { userId };
 
     const bookings = await prisma.booking.findMany({
-      where: { userId },
-      include: { court: true },
+      where,
+      include: {
+        court: true,
+        user: {
+          select: {
+            id: true,
+            firstName: true,
+            lastName: true,
+            email: true,
+          },
+        },
+      },
       orderBy: [{ date: 'desc' }, { startTime: 'desc' }],
     });
 

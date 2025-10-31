@@ -1,0 +1,9 @@
+--_curl_--
+>     "email": "admin@padel.com"
+--_curl_--
+>     "password": "Admin@123"
+--_curl_--
+>     "firstName": "Admin"
+--_curl_--
+>     "lastName": "User"
+>   
