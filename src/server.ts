@@ -39,9 +39,16 @@ if (process.env.SENTRY_DSN) {
 }
 
 // Socket.IO setup with online users tracking
+// Allow the configured CLIENT_URL, and fall back to the deployed frontend URL and localhost for dev
+const allowedOrigins = [
+  process.env.CLIENT_URL,
+  'https://padel-frontend-js35.onrender.com',
+  'http://localhost:3000',
+].filter(Boolean) as string[];
+
 export const io = new SocketIOServer(httpServer, {
   cors: {
-    origin: process.env.CLIENT_URL || 'http://localhost:3000',
+    origin: allowedOrigins,
     credentials: true,
   },
 });
@@ -138,7 +145,7 @@ io.on('connection', (socket) => {
 // Middleware
 app.use(helmet());
 app.use(cors({
-  origin: process.env.CLIENT_URL || 'http://localhost:3000',
+  origin: allowedOrigins,
   credentials: true,
 }));
 app.use(morgan('combined'));
