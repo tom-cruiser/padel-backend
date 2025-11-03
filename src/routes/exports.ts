@@ -18,6 +18,10 @@ router.get(
       .optional()
       .isISO8601()
       .withMessage('End date must be a valid ISO date'),
+    query('format')
+      .optional()
+      .isIn(['excel', 'pdf', undefined])
+      .withMessage('Format must be either excel or pdf'),
     validate,
   ],
   authenticate,

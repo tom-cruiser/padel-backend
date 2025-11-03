@@ -21,9 +21,8 @@ export const uploadToImageKit = async (file: Express.Multer.File, folder: string
       throw new Error('No file provided');
     }
 
-    if (!file.buffer) {
-      throw new Error('No file buffer found');
-    }
+    // Get file buffer from multer file
+    const buffer = file.buffer || await fs.promises.readFile(file.path);
 
     if (!file.mimetype.startsWith('image/')) {
       throw new Error('Invalid file type. Only images are allowed');
@@ -35,13 +34,13 @@ export const uploadToImageKit = async (file: Express.Multer.File, folder: string
       mimetype: file.mimetype
     });
 
-    // Convert file buffer to base64
+    // Convert buffer to base64
     const base64Image = file.buffer.toString('base64');
     const fileName = `${Date.now()}-${file.originalname.replace(/[^a-zA-Z0-9.]/g, '_')}`;
 
-    // Validate ImageKit configuration before upload
-    if (!imagekit.privateKey || !imagekit.publicKey || !imagekit.urlEndpoint) {
-      throw new Error('ImageKit configuration is missing');
+    // Validate ImageKit configuration
+    if (!process.env.IMAGEKIT_PUBLIC_KEY || !process.env.IMAGEKIT_PRIVATE_KEY || !process.env.IMAGEKIT_URL_ENDPOINT) {
+      throw new Error('ImageKit configuration is missing. Please check your environment variables.');
     }
 
     logger.info('Uploading to ImageKit...', { fileName });

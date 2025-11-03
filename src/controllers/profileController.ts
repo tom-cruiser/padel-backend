@@ -57,10 +57,13 @@ export const uploadAvatar = async (req: AuthRequest, res: Response) => {
     // Upload to ImageKit
     let result;
     try {
-      result = await uploadToImageKit(req.file.path, 'avatars');
+      result = await uploadToImageKit(req.file, 'avatars');
     } catch (error) {
       console.error('ImageKit upload error:', error);
-      return res.status(500).json({ message: 'Failed to upload to image service' });
+      return res.status(500).json({ 
+        message: 'Failed to upload to image service', 
+        details: error instanceof Error ? error.message : 'Unknown error'
+      });
     }
 
     // Update user avatar in database
