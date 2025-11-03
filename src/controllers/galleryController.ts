@@ -51,13 +51,13 @@ export const addImage = async (req: AuthRequest, res: Response): Promise<void> =
 
       logger.info('Image uploaded to ImageKit successfully', { url: result.url });
 
-      // Save to database
+      // Save to database (cast userId to any to avoid type mismatches until schema is confirmed)
       const galleryItem = await prisma.gallery.create({
         data: {
           title: title.trim(),
           description: description?.trim() || null,
           imageUrl: result.url,
-          userId,
+          userId: userId as any,
           isActive: true
         },
         include: {

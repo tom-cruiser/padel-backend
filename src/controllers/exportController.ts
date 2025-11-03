@@ -89,8 +89,9 @@ export const exportBookingHistory = async (req: AuthRequest, res: Response): Pro
         
         // Set headers and send response
         res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        res.setHeader('Content-Disposition', 'attachment; filename=bookings.xlsx');
-        return res.send(excelBuffer);
+  res.setHeader('Content-Disposition', 'attachment; filename=bookings.xlsx');
+  res.send(excelBuffer);
+  return;
 
       case 'pdf':
         const doc = new PDFDocument({

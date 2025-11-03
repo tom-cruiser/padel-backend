@@ -224,3 +224,4 @@
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/AuthorizationError'
+ */

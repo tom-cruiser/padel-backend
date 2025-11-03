@@ -8,7 +8,7 @@ const router = Router();
 
 // All routes require authentication
 router.use(authenticate);
-router.use(authorize(['ADMIN']));
+router.use(authorize('ADMIN'));
 
 // Get all users with pagination and filtering
 router.get('/users', getUsers);

@@ -10,7 +10,7 @@ export interface AuthRequest extends Request {
 }
 
 export const authenticate = async (
-  req: Request,
+  req: AuthRequest,
   res: Response,
   next: NextFunction
 ): Promise<void> => {
@@ -25,7 +25,7 @@ export const authenticate = async (
     const token = authHeader.substring(7);
     const decoded = verifyAccessToken(token);
 
-    req.user = decoded;
+  req.user = decoded;
     
     // Update last seen timestamp
     await prisma.user.update({
@@ -39,14 +39,22 @@ export const authenticate = async (
   }
 };
 
-export const authorize = (...roles: string[]) => {
+export const authorize = (...roles: any[]) => {
   return (req: AuthRequest, res: Response, next: NextFunction): void => {
     if (!req.user) {
       res.status(401).json({ error: 'Unauthorized' });
       return;
     }
 
-    if (!roles.includes(req.user.role)) {
+    // Allow passing an array or varargs
+    let allowedRoles: string[] = [];
+    if (roles.length === 1 && Array.isArray(roles[0])) {
+      allowedRoles = roles[0];
+    } else {
+      allowedRoles = roles as string[];
+    }
+
+    if (!allowedRoles.includes(req.user.role)) {
       res.status(403).json({ error: 'Forbidden: Insufficient permissions' });
       return;
     }

@@ -180,3 +180,4 @@
  *                   type: boolean
  *                 participant:
  *                   $ref: '#/components/schemas/User'
+ */

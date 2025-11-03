@@ -33,7 +33,7 @@ export function setupSocketIO(httpServer: HTTPServer) {
             where: { id: userId },
             data: { lastSeen: new Date() },
           });
-
+        
           // Emit updated online users list with full user details
           const onlineUsers = Array.from(connectedUsers.entries()).map(([id, data]) => ({
             userId: id,
@@ -42,8 +42,10 @@ export function setupSocketIO(httpServer: HTTPServer) {
 
           // Broadcast to all clients
           io.emit('users:online', onlineUsers);
+        } catch (err) {
+          console.error('Socket user:online handler error:', err);
         }
-      }).catch(console.error);
+      });
 
       // Handle message sending
       socket.on('message:send', async (data) => {
