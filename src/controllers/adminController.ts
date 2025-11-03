@@ -22,7 +22,7 @@ export const createAdmin = async (req: AuthRequest, res: Response) => {
       return res.status(400).json({
         success: false,
         message: 'Validation error',
-        errors: validatedData.error.errors
+        errors: validatedData.error.issues
       });
     }
 
@@ -49,8 +49,7 @@ export const createAdmin = async (req: AuthRequest, res: Response) => {
         firstName: validatedData.data.firstName,
         lastName: validatedData.data.lastName,
         phone: validatedData.data.phone,
-        role: 'ADMIN',
-        isEmailVerified: true, // Since this is created by another admin
+        role: 'ADMIN'
       },
       select: {
         id: true,
